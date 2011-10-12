@@ -22,8 +22,6 @@ class User:
 		fname -- the name of the text file containing the users events
 		
 		"""
-		for line in eventString.split('\n'):
-			print line
 		
 		return True
 		
