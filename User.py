@@ -1,9 +1,9 @@
-#User contains a HalfConvo and a Survey so that they can be easily related
+#User contains a events and a Survey so that they can be easily related
 #to their data
 
 class User:
 	
-	def __init__(self, fname, survey):
+	def __init__(self, eventString, survey):
 		"""Initialize user class
 		
 		Keyword arguments:
@@ -12,15 +12,18 @@ class User:
 		
 		"""
 		
-		self.__loadEventsFromFile(fname)
+		self.__loadEventsFromFile(eventString)
 		self.survey = survey
    
-	def loadEventsFromFile(fname):
+	def __loadEventsFromFile(self, eventString):
 		"""Create an array of events from the user's message file.
 	
 		Keyword arguments:
 		fname -- the name of the text file containing the users events
 		
 		"""
-		return true
+		for line in eventString.split('\n'):
+			print line
+		
+		return True
 		

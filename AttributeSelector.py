@@ -1,19 +1,36 @@
+global DEBUG
+DEBUG = False
 #==========================================================
+#TODO:
+#	-- Make a globals class so that I can globally set debug, parameters
+#	-- Lots of other things that i won't forget because i need to do them
+#  -- Look into measuring where in the sentence the word is located that is edited
+#      --> statistical analysis on sentences... from twitter, etc.?  db of
+#			  messenger convos?
+
+
+
+
 
 class AttributeSelector:
 	
 	global pprint
 	import os, pprint
 	
-	#DEBUG
-	global DEBUG
-	DEBUG = True
+	global Survey, User
+	from Survey import Survey
+	from User import User
 	
 	#----------File Location Constants---------
-	ROOT_DIR = '/users/s/b/sbbrown/Development/Thesis/Files'
+	ROOT_DIR = '/users/s/b/sbbrown/Development/Thesis/Files/'
 	
 	
 	def __init__(self):
+		"""Initialize AttributeSelector Class
+		
+		More to come...
+		
+		"""
 		#log errors
 		self.errors = []
 		
@@ -21,18 +38,18 @@ class AttributeSelector:
 		#store files in dictionary --> USERNAME =>
 		self.surveyFiles, self.userFiles = self.__getFiles()
 		
-		#get questionnaires
-		#store files in dictionary --> USERNAME => Questionnaire
+		self.chats = self.__makeChats()
 		
 		if DEBUG:
 			self.__debug()
+
 
 	def __getFiles(self):
 		"""Load message and survey files into separate arrays
 		
 		Return values:
 			surveys -- a list of survey files
-			userConvos -- a list of conversations had by users
+			userChats -- a list of conversations had by users
 		"""
 		surveyFiles = []
 		userFiles = []
@@ -43,7 +60,7 @@ class AttributeSelector:
 				file = AttributeSelector.os.path.join(dirpath, f)
 				
 				#trim file name and search string
-				file = file[len(AttributeSelector.ROOT_DIR)+1:]
+				file = file[len(AttributeSelector.ROOT_DIR):]
 				fname = file[6:]
 
 				#only add the correct files to the list
@@ -55,15 +72,27 @@ class AttributeSelector:
 		return surveyFiles, userFiles
 	
 
-	def __makeConvos(self):
+	def __makeChats(self):
 		"""Create conversations by loading users from survey and message files
 		
-		creates an array of conversations
+		creates an array of chats
 		"""
-		#for each survey file
-			#create a survey from each
-			#select appropriate text file based on survey username
-			#create user from survey and file contents
+		surveys = []
+		users = []
+		chats = []
+		
+		for surveyFile in self.surveyFiles:
+			survey = open(AttributeSelector.ROOT_DIR + surveyFile, 'r')
+			date = surveyFile.split('/')[0]
+			
+			#create a new Survey and user for each line in the survey file
+			for line in survey:
+				surveys.append(Survey(line))
+				userFile = surveys[-1].getUserFilename()
+				userFName = AttributeSelector.ROOT_DIR+date+'/'+userFile
+				userEventString = open(userFName, 'r').read()
+				users.append(User(userEventString, surveys[-1]))
+
 
 	def __debug(self):
 		print "Dumping Object AttributeSelector"
@@ -76,7 +105,6 @@ class AttributeSelector:
 
 if __name__ == '__main__':
 	selector = AttributeSelector()
-	print selector
 	 
 	 
 	 
