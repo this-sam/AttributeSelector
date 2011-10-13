@@ -20,7 +20,16 @@ class Survey:
 		if DEBUG:
 			self.__debug()
 	
+#===============================================
+#--------------Public  Functions----------------		
+	def getUserFilename(self):
+		#turn username into filename
+		splitUName = self.username.split('_')
+		return "User "+splitUName[0]+splitUName[2]+splitUName[3]+".txt"	
 	
+	
+#===============================================
+#--------------Private Functions----------------	
 	def __fillOutSurvey(self, surveyString):
 		splitSurvey = surveyString.split(';')
 		responses = []
@@ -28,22 +37,14 @@ class Survey:
 			responses.append(response.strip()[1:-1])
 		
 		#username is the first entry, but remove the [] after
-		self.userName = responses[0][1:-1]
+		self.username = responses[0][1:-1]
 		responses.remove(responses[0])
-		print self.userName
+		print self.username
 		self.userAge = responses.pop()
-		self.responses = responses
-	
-	def getUserFilename(self):
-		#turn username into filename
-		splitUName = self.userName.split('_')
-		return "User "+splitUName[0]+splitUName[2]+splitUName[3]+".txt"
-		
+		self.responses = responses		
 		
 	def __debug(self):
 		print "Dumping Object Survey"
-		pprint.pprint(self.userName)
+		pprint.pprint(self.username)
 		pprint.pprint(self.userAge)
 		pprint.pprint(self.responses)
-			
-		
