@@ -1,5 +1,3 @@
-global DEBUG
-DEBUG = False
 #==========================================================
 #TODO:
 #	-- Make a globals class so that I can globally set debug, parameters
@@ -17,14 +15,11 @@ class AttributeSelector:
 	global pprint
 	import os, pprint
 	
-	global Survey, User, Chat
+	global Survey, User, Chat, Settings
 	from Survey import Survey
+	from Settings import Settings
 	from User import User
 	from Chat import Chat
-	
-	#----------File Location Constants---------
-	#ROOT_DIR = '/users/s/b/sbbrown/Development/Thesis/Files/'
-	ROOT_DIR = '/Users/cscrew/Thesis/Files/'
 	
 	def __init__(self):
 		"""Initialize AttributeSelector Class
@@ -41,7 +36,7 @@ class AttributeSelector:
 		
 		self.chats = self.__makeChats()
 		
-		if DEBUG:
+		if Settings.DEBUG:
 			self.__debug()
 
 #===============================================
@@ -68,12 +63,12 @@ class AttributeSelector:
 		userFiles = []
 		
 		#walk the file directory
-		for dirpath, dirnames, filenames in AttributeSelector.os.walk(AttributeSelector.ROOT_DIR):
+		for dirpath, dirnames, filenames in AttributeSelector.os.walk(Settings.ROOT_DIR):
 			for f in filenames:
 				file = AttributeSelector.os.path.join(dirpath, f)
 				
 				#trim file name and search string
-				file = file[len(AttributeSelector.ROOT_DIR):]
+				file = file[len(Settings.ROOT_DIR):]
 				fname = file[6:]
 
 				#only add the correct files to the list
@@ -95,7 +90,7 @@ class AttributeSelector:
 		chats = []
 		
 		for surveyFile in self.surveyFiles:
-			survey = open(AttributeSelector.ROOT_DIR + surveyFile, 'r')
+			survey = open(Settings.ROOT_DIR + surveyFile, 'r')
 			date = surveyFile.split('/')[0]
 			
 			#create a new Survey and user for each line in the survey file
@@ -104,17 +99,16 @@ class AttributeSelector:
 			for line in survey:
 				surveys.append(Survey(line))
 				userFile = surveys[-1].getUserFilename()
-				userFName = AttributeSelector.ROOT_DIR+date+'/'+userFile
+				userFName = Settings.ROOT_DIR+date+'/'+userFile
 				userEventString = open(userFName, 'r').read()
 				user = User(userEventString, surveys[-1])
-				tmpUsers[user.username] = user
+				tmpUsers[user.index] = user
 				
 			#pair users and create chats	
 			for username, user in tmpUsers.iteritems():
 				if ((user.classification == 'A') or (user.classification == 'C')):
-					chats.append(Chat(user, tmpUsers[user.partner]))
+					chats.append(Chat(user, tmpUsers[user.partnerIndex]))
 					
-			print chats
 
 
 	def __debug(self):

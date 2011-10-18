@@ -3,11 +3,9 @@
 
 class User:
 	
-	global Event
+	global Event, Settings
 	from Event import Event
-	
-	EVENT_TYPES = ['tim', 'stt', 'bkb', 'bka', 'snd']
-	USERNAME_MAPPINGS = {'A':'B', 'B':'A', 'C':'D', 'D':'C'}
+	from Settings import Settings
 	
 	def __init__(self, eventString, survey):
 		"""Initialize user class
@@ -23,8 +21,14 @@ class User:
 		self.eventString = eventString
 		self.survey = survey
 		self.username = survey.username
-		self.partner = self.__findPartner()
+		self.index = self.username[0:-3]
+		self.partnerIndex = self.__findPartnerIndex()
 		self.classification = self.__findClassification()
+		
+		if Settings.DEBUG:
+			self.__debug()
+		
+		
 
 
 #===============================================
@@ -43,13 +47,16 @@ class User:
 		
 		events = []
 		lookupTables ={}
+		
+		lines = eventString.split('[end]')
 
 		#load events into array
-		for line in eventString:
-			events.append(Event(line))
+		for line in lines:
+			if (len(line) > 34):
+				events.append(Event(line.strip()))
 		
 		#prepare lookupTables with defined event types
-		for type in User.EVENT_TYPES:
+		for type in Settings.EVENT_TYPES:
 			lookupTables[type] = []
 		
 		#create the arrays in the lookupTable
@@ -58,11 +65,17 @@ class User:
 			
 		return events, lookupTables
 			
-	def __findPartner(self):
+	def __findPartnerIndex(self):
 		classification, sep, suffix = self.username.partition('_')
-		return User.USERNAME_MAPPINGS[classification]+sep+suffix
+		return (Settings.USERNAME_MAPPINGS[classification]+sep+suffix)[0:-3]
 		
 	def __findClassification(self):
 		classification, sep, suffix = self.username.partition('_')
 		return classification
 			
+	def __debug(self):
+		print "Dumping Object User"
+		print self.username
+#		pprint.pprint(self.username)
+#		pprint.pprint(self.userAge)
+#		pprint.pprint(self.responses)

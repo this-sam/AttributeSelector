@@ -1,12 +1,12 @@
 #Survey contains the list of a user's particular responses to the survey
 
-global DEBUG
-DEBUG = False
-
 class Survey:
 	
 	global pprint
 	import pprint
+	
+	global Settings
+	from Settings import Settings
 	
 	def __init__(self, surveyString):
 		"""Initialize Survey class
@@ -17,7 +17,7 @@ class Survey:
 		"""
 		self.__fillOutSurvey(surveyString)
 		
-		if DEBUG:
+		if Settings.DEBUG:
 			self.__debug()
 	
 #===============================================
@@ -39,7 +39,6 @@ class Survey:
 		#username is the first entry, but remove the [] after
 		self.username = responses[0][1:-1]
 		responses.remove(responses[0])
-		print self.username
 		self.userAge = responses.pop()
 		self.responses = responses		
 		
