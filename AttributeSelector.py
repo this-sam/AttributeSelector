@@ -23,8 +23,8 @@ class AttributeSelector:
 	from Chat import Chat
 	
 	#----------File Location Constants---------
-	ROOT_DIR = '/users/s/b/sbbrown/Development/Thesis/Files/'
-	
+	#ROOT_DIR = '/users/s/b/sbbrown/Development/Thesis/Files/'
+	ROOT_DIR = '/Users/cscrew/Thesis/Files/'
 	
 	def __init__(self):
 		"""Initialize AttributeSelector Class
@@ -108,12 +108,13 @@ class AttributeSelector:
 				userEventString = open(userFName, 'r').read()
 				user = User(userEventString, surveys[-1])
 				tmpUsers[user.username] = user
-				print tmpUsers
 				
 			#pair users and create chats	
 			for username, user in tmpUsers.iteritems():
 				if ((user.classification == 'A') or (user.classification == 'C')):
 					chats.append(Chat(user, tmpUsers[user.partner]))
+					
+			print chats
 
 
 	def __debug(self):

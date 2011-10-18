@@ -19,7 +19,7 @@ class User:
 		"""
 		
 		#TOO MUCH MEMORY WTF!
-		#self.events, self.lookupTables = self.__loadEventsFromFile(eventString)
+		self.events, self.lookupTables = self.__loadEventsFromFile(eventString)
 		self.eventString = eventString
 		self.survey = survey
 		self.username = survey.username

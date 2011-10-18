@@ -9,10 +9,10 @@ class Chat:
 	def __init__(self, userA, userB):
 		self.userA, self.userB = userA, userB
 		
-		self.visualize()
+		#self.visualize(.07)
 			
 			
-	def visualize(self, speed=.05):
+	def visualize(self, speed=.01):
 		##DELETE ME THIS IS ONLY TO WATCH
 		A = self.userA.eventString.split('[end]')
 		B = self.userB.eventString.split('[end]')
