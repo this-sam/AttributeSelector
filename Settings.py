@@ -5,7 +5,7 @@ class Settings:
     DEBUG = False 
     
     #-----------Visualization-----------------
-    VISUALIZE = False
+    VISUALIZE = True
     VIS_SPEED = .07
     
     #----------File Location Constants---------
