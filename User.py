@@ -76,6 +76,3 @@ class User:
 	def __debug(self):
 		print "Dumping Object User"
 		print self.username
-#		pprint.pprint(self.username)
-#		pprint.pprint(self.userAge)
-#		pprint.pprint(self.responses)

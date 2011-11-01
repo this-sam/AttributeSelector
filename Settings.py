@@ -14,6 +14,7 @@ class Settings:
     
     #----------Event Constants---------
     EVENT_TYPES = ['tim', 'stt', 'bkb', 'bka', 'snd', 'deb', 'dea']
+    EMOTICON_TYPES = [':)', ': )', ':-)']
     
     #----------Username Constants---------
     USERNAME_MAPPINGS = {'A':'B', 'B':'A', 'C':'D', 'D':'C'}
