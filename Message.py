@@ -82,18 +82,20 @@ class Message:
 	def getSendDelay(self):
 		if self.sendDelay == -1:
 			for i in range(len(self.events)-1, 0, -1):
-				if self.events[i].text != self.events[-1]:
+				if self.events[i].text != self.events[-1].text:
 					return self.events[-1].timestampAsDatetime - self.events[i].timestampAsDatetime
+			return datetime.timedelta(seconds=0)
 		else:
 			return self.sendDelay
 		
 	def getTotalDeletions(self):
 		if self.totalDeletions == -1:
-			self.totalDeletions = 0
+			totalDeletions = 0
 			if "bkb" in self.eventLookupTables:
-				self.totalDeletions += len(self.eventLookupTables["bkb"])
+				totalDeletions += len(self.eventLookupTables["bkb"])
 			if "deb" in self.eventLookupTables:
-				self.totalDeletions += len(self.eventLookupTables["deb"])
+				totalDeletions += len(self.eventLookupTables["deb"])
+			return totalDeletions
 		else:
 			return self.totalDeletions
 	
