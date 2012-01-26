@@ -42,14 +42,15 @@ class AttributeSelector:
 #===============================================
 #--------------Public  Functions----------------
 
-	#!!!!!MOVE TO CHAT CLASS!!!!!!
-	def printConvo(self, user):
-		pass
-
-
-
-
-
+		def printFeatures(self):
+			featureVectors = []			
+			for chat in self.chats:
+				chat.userA.selectFeatures()
+				featureVectors.append(chat.userA.getFeatureVector())
+				chat.userB.selectFeatures()
+				featureVectors.append(chat.userB.getFeatureVector())
+				
+				
 #===============================================
 #--------------Private Functions----------------
 	def __getFiles(self):
@@ -108,7 +109,8 @@ class AttributeSelector:
 			for username, user in tmpUsers.iteritems():
 				if ((user.classification == 'A') or (user.classification == 'C')):
 					chats.append(Chat(user, tmpUsers[user.partnerIndex]))
-					
+		
+		return chats			
 
 
 	def __debug(self):

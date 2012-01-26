@@ -11,7 +11,6 @@ class Chat:
 	from Settings import Settings
 	
 	def __init__(self, userA, userB):
-		
 		#grab partners, and set their partner usernames correctly
 		self.userA, self.userB = userA, userB
 		self.userA.partner = self.userB.username
@@ -25,7 +24,6 @@ class Chat:
 			
 			
 	def visualize(self, speed=.01):
-		##DELETE ME THIS IS ONLY TO WATCH
 		A = self.userA.eventString.split('[end]')
 		B = self.userB.eventString.split('[end]')
 		for i in range(min(len(A), len(B))):
