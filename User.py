@@ -38,6 +38,7 @@ class User:
 		self.classification = self.__getClassification()
 		self.orientation = self.__getOrientation()
 		self.gender = self.__getGender()
+		self.surveyClass = self.survey.responses[Settings.USER_CLASS_QUESTION]
 		
 		#load messages from events
 		self.messages, self.messageLookupTables = self.__loadMessagesFromEvents()
@@ -48,7 +49,7 @@ class User:
 								  'avgCompositionTime',\
 							     'avgCompositionDelay', 'avgTotalEvents', 'avgSendDelay', 'avgDeletions',\
 							     'avgDeletedChars','avgMessageLength','avgMessageWords','avgMessageChars',\
-							     'avgCharsPerMin','avgWordsPerMin', 'ratioSent']
+							     'avgCharsPerMin','avgWordsPerMin', 'ratioSent', 'surveyClass']
 		
 		self.lastFeatureSet = self.allFeatures
 		
