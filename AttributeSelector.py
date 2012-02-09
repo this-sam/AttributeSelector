@@ -35,6 +35,10 @@ class AttributeSelector:
 		self.surveyFiles, self.userFiles = self.__getFiles()
 		
 		self.chats = self.__makeChats()
+		self.featureVectors = self.getFeatureVectors()
+		self.featureSet = self.chats[0].userA.getFeatureSet()
+		
+		self.printToCSV(self.featureVectors, self.featureSet)
 		
 		if Settings.DEBUG:
 			self.__debug()
@@ -42,15 +46,33 @@ class AttributeSelector:
 #===============================================
 #--------------Public  Functions----------------
 
-		def printFeatures(self):
-			featureVectors = []			
-			for chat in self.chats:
-				chat.userA.selectFeatures()
-				featureVectors.append(chat.userA.getFeatureVector())
-				chat.userB.selectFeatures()
-				featureVectors.append(chat.userB.getFeatureVector())
-				
-				
+	def getFeatureVectors(self):
+		featureVectors = []			
+		for chat in self.chats:
+			featureVectors.append(chat.userA.featureVector)
+			featureVectors.append(chat.userB.featureVector)
+		return featureVectors
+	
+	def printToCSV(self, featureVectors, featureSet, withHeader=True, overwrite=True):
+		if overwrite:
+			f = open("Features.csv", 'w')
+		else:
+			f = open("Features.csv", 'a')
+		
+		if withHeader:
+			for heading in featureSet:
+				f.write(heading+",")
+			f.write("\r\n")
+		
+		for vector in featureVectors:
+			row = ""
+			for element in vector:
+				row+=str(element)+","
+			f.write(row+"\r\n")
+		f.close()
+		
+			
+			
 #===============================================
 #--------------Private Functions----------------
 	def __getFiles(self):

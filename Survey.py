@@ -15,6 +15,12 @@ class Survey:
 		surveyString -- a line from the survey file, from which the survey inftializes all values
 		
 		"""
+		#=======================================================
+		#INITIALIZE SURVEY VARIABLES:	#+ --> feature implemented
+		self.username = ""
+		self.userAge = 0
+		self.responses = []
+		
 		self.__fillOutSurvey(surveyString)
 		
 		if Settings.DEBUG:
