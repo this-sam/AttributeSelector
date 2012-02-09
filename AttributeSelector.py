@@ -37,9 +37,13 @@ class AttributeSelector:
 		
 		self.chats = self.__makeChats()
 		self.featureVectors = self.getFeatureVectors()
-		self.featureSet = self.chats[0].userA.getFeatureSet()
 		
-		self.printToCSV(self.featureVectors, self.featureSet)
+		#make sure we loaded files
+		if len(self.chats) > 0:
+			self.featureSet = self.chats[0].userA.getFeatureSet()
+			self.printToCSV(self.featureVectors, self.featureSet)
+		else:
+			print "No chat files could be found."
 		
 		if Settings.DEBUG:
 			self.__debug()
