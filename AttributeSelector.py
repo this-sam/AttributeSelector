@@ -33,6 +33,7 @@ class AttributeSelector:
 		#get input files
 		#store files in dictionary --> USERNAME =>
 		self.surveyFiles, self.userFiles = self.__getFiles()
+		print self.surveyFiles
 		
 		self.chats = self.__makeChats()
 		self.featureVectors = self.getFeatureVectors()
@@ -53,6 +54,7 @@ class AttributeSelector:
 			featureVectors.append(chat.userB.featureVector)
 		return featureVectors
 	
+
 	def printToCSV(self, featureVectors, featureSet, withHeader=True, overwrite=True):
 		if overwrite:
 			f = open("Features.csv", 'w')

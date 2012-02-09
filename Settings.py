@@ -1,7 +1,7 @@
 #settings file: contains all global settings
 
 class Settings:
-	 #========================DEBUG=============================
+    #========================DEBUG=============================
 	 DEBUG = False 
 	 
 	 #-----------Visualization---------------
@@ -9,7 +9,10 @@ class Settings:
 	 VIS_SPEED = .07
 	 
 	 #----------File Location Constants----------
-	 ROOT_DIR = '/users/s/b/sbbrown/Development/Thesis/Files/'
+	 #mac
+	 ROOT_DIR = "/Volumes/Macintosh HD 2/Development/Thesis/Files/"
+	 #uvm srvr
+	 #ROOT_DIR = '/users/s/b/sbbrown/Development/Thesis/Files/'
 	 #ROOT_DIR = '/Users/cscrew/Thesis/Files/'
 	 
 	 #----------Event Constants-----------
