@@ -30,8 +30,8 @@ class Survey:
 #--------------Public  Functions----------------		
 	def getUserFilename(self):
 		#turn username into filename
-		splitUName = self.username.split('_')
-		return "User "+splitUName[0]+splitUName[2]+splitUName[3]+".txt"	
+		
+		return self.username+".txt"	
 	
 	
 #===============================================
@@ -45,6 +45,11 @@ class Survey:
 		#username is the first entry, but remove the [] after
 		self.username = responses[0][1:-1]
 		responses.remove(responses[0])
+
+		#now the responses can be stored as integers
+		for i in range(len(responses)):
+			responses[i] = int(responses[i])
+			
 		self.userAge = responses.pop()
 		self.responses = responses		
 		

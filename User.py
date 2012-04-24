@@ -1,5 +1,9 @@
 #User contains a events and a Survey so that they can be easily related
 #to their data
+#todo:
+#       -implement max/min of each of these attributes
+#       -normalize conversations
+
 
 class User:
 	
@@ -50,9 +54,7 @@ class User:
 								  'avgCompositionTime',\
 							     'avgCompositionDelay', 'avgTotalEvents', 'avgSendDelay', 'avgDeletions',\
 							     'avgDeletedChars','avgMessageLength','avgMessageWords','avgMessageChars',\
-							     'avgCharsPerMin','avgWordsPerMin', 'ratioSent', 'surveyClass']
-		
-		self.lastFeatureSet = self.allFeatures
+							     'avgCharsPerMin','avgWordsPerMin', 'ratioSent']
 		
 		self.numMessages = len(self.messages)
 		self.numEvents = len(self.events)
@@ -86,8 +88,13 @@ class User:
 		#print "ratiosent:", self.ratioSent
 		
 		#=============== 
-		#SELECT FEATURES 
+		#SELECT FEATURES
+		self.lastFeatureSet = self.allFeatures
 		self.featureVector = self.selectFeatures(self.allFeatures)
+		for i in range(len(self.survey.responses)):
+			self.allFeatures.append("Question "+str(i+1))
+			self.featureVector.append(self.survey.responses[i])
+		self.lastFeatureSet = self.allFeatures
 		
 		if Settings.DEBUG:
 			self.__debug()
@@ -215,6 +222,13 @@ class User:
 					
 				thisMessage = Message(messageEvents)
 				thisMessage.setTimeLastSent(lastSnd)
+				#set features
+				thisMessage.addFeature("gender",self.gender)
+				thisMessage.addFeature("username",self.username)
+				thisMessage.addFeature("classification",self.classification)
+				for i in range(len(self.survey.responses)):
+					thisMessage.addFeature("Question "+str(i+1), self.survey.responses[i])
+				thisMessage.addFeature("surveyClass", sum(self.survey.responses[9:]))
 				messages.append(thisMessage)
 				
 				#log this message in the lookup table

@@ -10,9 +10,9 @@ class Settings:
 	 
 	 #----------File Location Constants----------
 	 #mac
-	 #ROOT_DIR = "/Volumes/Macintosh HD 2/Development/Thesis/Files/"
+	 ROOT_DIR = "/Volumes/Macintosh HD 2/Development/Thesis/Files/"
 	 #uvm srvr
-	 ROOT_DIR = '/users/s/b/sbbrown/Development/Thesis/Files/'
+	 #ROOT_DIR = '/users/s/b/sbbrown/Development/Thesis/Chat/Files/'
 	 #CsCrew Mac
 	 #ROOT_DIR = '/Users/cscrew/Thesis/Files/'
 	 #PC

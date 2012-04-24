@@ -47,7 +47,17 @@ class Message:
 		
 		self.hasEmoticons = False		#- does this event contain emoticons?
 		self.emoticons = []				#- array of emoticons used in this event
-
+		
+		#VARS SET BY USER CLASS
+		self.userGender = ""				#+ gender of user
+		
+		
+		self.featureVector = []			#- and the moment you've all been waiting for...
+		self.allFeatures = ["sent","compositionTime", "compositionDelay", "totalEvents", "sendDelay", \
+								  "totalDeletions", "finalLength", "totalWords", "totalChars",\
+								  "charsPerMin", "wordsPerMin"]
+								  #Added by USER class:
+								  #GENDER
 		
 		
 		#begin setting Message variables		
@@ -67,6 +77,8 @@ class Message:
 		
 		self.charsPerMin = self.getCharactersPerMinute()
 		self.wordsPerMin = self.getWordsPerMinute()
+		
+		self.featureVector = self.selectFeatures(self.allFeatures)
 	
 		if Settings.DEBUG:
 			self.__debug()
@@ -105,6 +117,28 @@ class Message:
 		else:
 			return self.wordsPerMin
 	
+	def getFeatureSet(self):
+		return self.allFeatures
+
+	def selectFeatures(self, features):
+		"""for each feature in the features (list of strings which represent variable names
+		within the class), select the variable and add it to a the feature vector."""
+		featureVector = []
+		for feature in features:
+			#check types:
+			if not hasattr(self, feature):
+				raise Exception("Message does not have feature "+feature)
+
+			if type(vars(self)[feature]) == datetime.timedelta:
+				seconds, microseconds = vars(self)[feature].seconds, vars(self)[feature].microseconds
+				seconds += microseconds/1000000.
+				featureVector.append(seconds)
+			else:
+				featureVector.append(vars(self)[feature])
+				
+		self.lastFeatureSet = features
+		return featureVector
+	
 
 #---------------------------------------------
 #Setter functions!
@@ -115,6 +149,12 @@ class Message:
 	def addEventFromString(self, eventString):
 		e = Event(eventString)
 		self.events.append(event)
+		
+		
+	def addFeature(self, featureName, featureValue):
+		vars(self)[featureName] = featureValue
+		self.allFeatures.append(featureName)
+		self.featureVector.append(featureValue)
 		
 		
 	def generateEventLookupTables(self):
