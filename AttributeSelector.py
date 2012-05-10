@@ -1,13 +1,15 @@
-#==========================================================
-#TODO:
-#	-- Make a globals class so that I can globally set debug, parameters
-#	-- Lots of other things that i won't forget because i need to do them
-#  -- Look into measuring where in the sentence the word is located that is edited
-#      --> statistical analysis on sentences... from twitter, etc.?  db of
-#			  messenger convos?
+#===============================================================================
+# AttributeSelector by Sam Brown
+#
+# AttributeSelector is the "driver" class for the feature selection software written
+# for my thesis.  Location of chat files and other settings may be changed in
+# Settings.py.  To use this class, simply edit the settings file and then run
+# AttributeSelector.py
+#
+#===============================================================================
 
 class AttributeSelector:
-	
+	"""Parses through chat log files and survey results to create feature vectors."""
 	global re, pprint
 	import os, pprint, re
 	
@@ -18,13 +20,7 @@ class AttributeSelector:
 	from Chat import Chat
 	
 	def __init__(self):
-		"""Initialize AttributeSelector Class
-		
-		More to come...
-		
-		"""
-		#log errors
-		self.errors = []
+		"""Load files, parse files into objects, print features to a csv file."""
 		
 		#get input files
 		#store files in dictionary --> USERNAME =>
@@ -54,6 +50,7 @@ class AttributeSelector:
 #--------------Public  Functions----------------
 
 	def getUserFeatureVectors(self):
+		"""Retrieve a list of feature vectors from all Users contained in Chats."""
 		featureVectors = []			
 		for chat in self.chats:
 			featureVectors.append(chat.userA.featureVector)
@@ -61,13 +58,14 @@ class AttributeSelector:
 		return featureVectors
 	
 	def getMessageFeatureVectors(self):
-		featureVectors = []			
+		"""Retrieve a list of feature vectors from all Messages contained in Chats."""
 		for chat in self.chats:
 			for message in chat.userA.messages+chat.userB.messages:
 				featureVectors.append(message.featureVector)
 		return featureVectors
 
 	def printToCSV(self, featureVectors, featureSet, fileName = "Features.csv", withHeader=True, overwrite=True):
+		"""Output feature vectors to a .csv file."""
 		if overwrite:
 			f = open(fileName, 'w')
 		else:
@@ -123,6 +121,7 @@ class AttributeSelector:
 		users = {}
 		chats = []
 		
+		#loop through any number of survey files in order to 
 		for surveyFile in self.surveyFiles:
 			survey = open(surveyFile, 'r')
 			date = surveyFile.split('/')[0]
@@ -131,10 +130,7 @@ class AttributeSelector:
 			#add the users to a temporary array so that they can be added into chats
 			tmpUsers = {}
 			for line in survey:
-				#temporary hack to prevent out of memory errors
-				#if len(tmpUsers) > 20:
-				#	break
-				
+				#find users based on survey results			
 				surveys.append(Survey(line))
 				userFile = surveys[-1].getUserFilename()
 				userFName = Settings.ROOT_DIR+userFile
@@ -146,9 +142,6 @@ class AttributeSelector:
 					tmpUsers[user.index] = user
 				except IOError:
 					print "Expected file "+userFile+" was not found."
-				#prevent memory leaks
-				#if len(tmpUsers) >= 14:
-				#	break
 				
 			#pair users and create chats	
 			for username, user in tmpUsers.iteritems():
@@ -162,12 +155,12 @@ class AttributeSelector:
 
 
 	def __debug(self):
+		"""Print all variables contained in Attribute Selector."""
 		print "Dumping Object AttributeSelector"
 		pprint.pprint(self.surveyFiles)
 		pprint.pprint(self.userFiles)
-		pprint.pprint(self.errors)
 
-
+#make this object runnable
 if __name__ == '__main__':
 	selector = AttributeSelector()
 	 

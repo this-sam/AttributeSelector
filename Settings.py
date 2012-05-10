@@ -1,4 +1,11 @@
-#settings file: contains all global settings
+#===============================================================================
+#
+# Settings.py by Sam Brown
+#
+# Contains all globally required settings for the AttributeSelector in one convenient
+# place.  Modify these to set for all objects.
+#
+#===============================================================================
 
 class Settings:
     #========================DEBUG=============================
@@ -9,16 +16,9 @@ class Settings:
 	 VIS_SPEED = .07
 	 
 	 #----------File Location Constants----------
-	 #mac
-	 #ROOT_DIR = "/Volumes/Macintosh HD 2/Development/Thesis/Files/"
-	 #uvm srvr
-	 #ROOT_DIR = '/users/s/b/sbbrown/Development/Thesis/Chat/Files/'
-	 #Home Ubuntu
+     #Home Ubuntu
 	 ROOT_DIR = '/home/sam/Development/ConversationGenerator/Files/'
-	 #CsCrew Mac
-	 #ROOT_DIR = '/Users/cscrew/Thesis/Files/'
-	 #PC
-	 #ROOT_DIR = "E:\\Development\\Thesis\\Files\\"
+
 	 #----------Event Constants-----------
 	 EVENT_TYPES = ['tim', 'stt', 'bkb', 'bka', 'snd', 'deb', 'dea']
 	 EMOTICON_TYPES = [':)', ': )', ':-)']
@@ -34,10 +34,3 @@ class Settings:
 
 	 #----------Time Constants-----------
 	 YEAR = 2012
-	 
-	 #----------Feature Vectors----------?
-	 #USER_FEATURES_STATIC = ['gender','orientation']
-	 #USER_FEATURES_TOTALLED = ['numMessages', 'numEvents']
-	 #USER_FEATURES_AVERAGED = []
-	 #USER_FEATURES_CUSTOM = []
-	 USER_CLASS_QUESTION = 7	#pick a survery question number for now (mapped like array: question 1 = index 0)

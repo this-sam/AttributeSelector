@@ -1,6 +1,13 @@
-#A message refers to an individual line from the final chat transcript.
-#This constitutes either a finished, sent message or a message that was composed
-#and then fully deleted.
+#===============================================================================
+#
+# Message.py by Sam Brown
+#
+# A  message refers to an individual line from the final chat transcript.
+# It consists of all events that occur between two periods of empty text
+# box during a user's side of the chat.  The Message calculates its own feature
+# values by looking through these events.
+#
+#===============================================================================
 
 class Message:
 	
@@ -10,6 +17,7 @@ class Message:
 	import datetime
 	
 	def __init__(self, events = []):
+		"""Load all events, calculate feature values based on these."""
 		if Settings.DEBUG:
 			print "Initializing Object Message"
 			
@@ -26,33 +34,21 @@ class Message:
 		self.totalEvents = -1			#+ how many events went into this message
 		self.sendDelay = -1				#+ how long did user wait before sending/deleting
 		
-		self.sent = False					#+ was this message ever actually sent?
+		self.sent = False				#+ was this message ever actually sent?
 		
 		self.totalDeletions = -1		#+ how many times were things deleted
-		self.totalDeletedChars = -1	#- how many total characters were deleted
 		self.finalLength = -1			#+ final length of message before sent or no more insertions
-		self.totalWords = -1				#+ number of words in message
-		self.totalChars = -1				#+ number of letters/numerals (non whitespace chars)
+		self.totalWords = -1			#+ number of words in message
+		self.totalChars = -1			#+ number of letters/numerals (non whitespace chars)
 		
 		self.charsPerMin = -1			#+ characters per minute
 		self.wordsPerMin = -1			#+ words per minute
 		
-		self.numPauses = -1				#- how many times the user paused for at least 1/2 second
-		self.hasPunctuation = False	#- did the user use punctuation?
-		
-		self.hasTitleCase = False		#- did the user capitalize some words? (names, sentence start)
-		self.hasCapsWord = False 		#- any words of all capitals?
-		self.capsSegments = []			#- what chunks are all caps?
-		self.capsRatio	= -1				#- ratio of capitalized to non-capitalized letters
-		
-		self.hasEmoticons = False		#- does this event contain emoticons?
-		self.emoticons = []				#- array of emoticons used in this event
-		
 		#VARS SET BY USER CLASS
-		self.userGender = ""				#+ gender of user
+		self.userGender = ""			#+ gender of user
 		
 		
-		self.featureVector = []			#- and the moment you've all been waiting for...
+		self.featureVector = []			#+ and the moment you've all been waiting for...
 		self.allFeatures = ["sent","compositionTime", "compositionDelay", "totalEvents", "sendDelay", \
 								  "totalDeletions", "finalLength", "totalWords", "totalChars",\
 								  "charsPerMin", "wordsPerMin"]
@@ -86,12 +82,14 @@ class Message:
 #---------------------------------------------
 #Getter functions!
 	def getCharactersPerMinute(self):
+		"""Calculate typing speed from length of final message and composition time."""
 		if self.charsPerMin == -1 and self.compositionTime.seconds != 0:
 			return self.totalChars/(self.compositionTime.seconds/60.0)
 		else:
 			return self.charsPerMin
 
 	def getSendDelay(self):
+		"""Determine delay between when the final message text had been composed and when it was sent."""
 		if self.sendDelay == -1:
 			for i in range(len(self.events)-1, 0, -1):
 				if self.events[i].text != self.events[-1].text:
@@ -101,6 +99,7 @@ class Message:
 			return self.sendDelay
 		
 	def getTotalDeletions(self):
+		"""Check all events to determine the total number of deletion events that took place."""
 		if self.totalDeletions == -1:
 			totalDeletions = 0
 			if "bkb" in self.eventLookupTables:
@@ -112,12 +111,14 @@ class Message:
 			return self.totalDeletions
 	
 	def getWordsPerMinute(self):
+		"""Calculate typing speed based on number of words and composition time."""
 		if self.wordsPerMin == -1 and self.compositionTime.seconds != 0:
 			return self.totalWords/(self.convertTimedeltaToMinutes(self.compositionTime))
 		else:
 			return self.wordsPerMin
 	
 	def getFeatureSet(self):
+		"""Returns the set of all features contained by this message."""
 		return self.allFeatures
 
 	def selectFeatures(self, features):
@@ -143,45 +144,55 @@ class Message:
 #---------------------------------------------
 #Setter functions!
 	def addEvent(self, event):
+		"""Append an event to the list of events contained in this Message."""
 		self.events.append(event)
 		
 		
 	def addEventFromString(self, eventString):
+		"""Creates an event based on a string and adds it to the list of events."""
 		e = Event(eventString)
 		self.events.append(event)
 		
 		
 	def addFeature(self, featureName, featureValue):
+		"""Adds a feature to the vector by creating a new local variable based on
+		the string of the feature name, and adding it to the output vector by
+		adding it to the list of features."""
 		vars(self)[featureName] = featureValue
 		self.allFeatures.append(featureName)
 		self.featureVector.append(featureValue)
 		
 		
 	def generateEventLookupTables(self):
-			self.eventLookupTables = {}
-			#prepare eventLookupTables with defined event types
-			for type in Settings.EVENT_TYPES:
-				self.eventLookupTables[type] = []
-			
-			#create the arrays in the lookupTable
-			for i in range(len(self.events)):
+		"""Speed up finding certain kinds of events by creating lookup tables."""
+		self.eventLookupTables = {}
+		#prepare eventLookupTables with defined event types
+		for type in Settings.EVENT_TYPES:
+			self.eventLookupTables[type] = []
+		
+		#create the arrays in the lookupTable
+		for i in range(len(self.events)):
 				self.eventLookupTables[self.events[i].type].append(i)
 				
 			
 	def setTimeLastSent(self, timeLastSent):
+		"""Set the timestamp of when the user sent the previous message."""
 		self.timeLastSent = timeLastSent
 		self.compositionDelay = self.timeStarted - self.timeLastSent
 		
 		
 	def sortEvents(self):
+		"""Sorts the events by date."""
 		self.events.sort()
 		
 #---------------------------------------------
 #Misc functions!
 	def convertTimedeltaToMinutes(self, delta):
+		"""Converts a python TimeDelta object into minutes."""
 		seconds = delta.seconds+delta.microseconds/1000000.0
 		return seconds/60.0
 
 	def __debug(self):
-		print "Dumping Object Message"
+		"""Print all variables contained in Message."""
+		pass
 		

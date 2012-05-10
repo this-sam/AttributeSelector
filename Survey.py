@@ -1,3 +1,12 @@
+#===============================================================================
+#
+# Survey.py by Sam Brown
+#
+# Contains all of a user's responses to the post-study questionnaire.  
+#
+#===============================================================================
+
+
 #Survey contains the list of a user's particular responses to the survey
 
 class Survey:
@@ -29,14 +38,15 @@ class Survey:
 #===============================================
 #--------------Public  Functions----------------		
 	def getUserFilename(self):
+		"""Appends text to username to produce the name of that user's log file."""
 		#turn username into filename
-		
 		return self.username+".txt"	
 	
 	
 #===============================================
 #--------------Private Functions----------------	
 	def __fillOutSurvey(self, surveyString):
+		"""Sets the responses to each survey question."""
 		splitSurvey = surveyString.split(';')
 		responses = []
 		for response in splitSurvey:
@@ -54,6 +64,7 @@ class Survey:
 		self.responses = responses		
 		
 	def __debug(self):
+		"""Outputs all variables contained in the Survey object."""
 		print "Dumping Object Survey"
 		pprint.pprint(self.username)
 		pprint.pprint(self.userAge)

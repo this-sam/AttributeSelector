@@ -1,5 +1,13 @@
-#Many types of events are contained during a conversation.  This class makes it
-#easier to determine which type of event, etc.
+#===============================================================================
+#
+# Event.py by Sam Brown
+#
+# Many types of events are contained during a conversation.  The Event class
+# handles categorization of the event as well as extracting certain metrics or
+# features.
+#
+#===============================================================================
+
 
 class Event:
 	
@@ -9,33 +17,23 @@ class Event:
 
 	
 	def __init__(self, rawString):
+		"""Load raw string of event, calculate all attributes based on raw string."""
 		self.rawString = rawString
 		splitString = self.rawString.split(',', 5)
 		
 		#INITIALIZE EVENT VARIABLES:	#+ --> feature implemented
-		self.type = ""						#+ what type of event (list in Settings.py)
+		self.type = ""					#+ what type of event (list in Settings.py)
 		self.username = ""				#+ username of person who caused event
-		self.text = ""						#+ text in text box during event
+		self.text = ""					#+ text in text box during event
 		self.timestamp = ""				#+ timestamp of when event took place
 		
 		self.timestampAsDatetime = -1	#+ save the timestamp as a python datetime object
 		
-		self.isEmpty = False				#+ is there text?
-		self.length = -1					#+ total length of text
+		self.isEmpty = False			#+ is there text?
+		self.length = -1				#+ total length of text
 		self.numChars = -1				#+ total characters in text box during event
 		self.numWords = -1				#+ total number of "words" (sep by spaces)
-		self.avgWordLen = -1				#+ average length of words (no punctuation)
-		
-		self.hasPunctuation = False	#- boolean has punctuation (yes/no)
-		self.punctuation = []			#- array containing all punctuation, in order
-		
-		self.hasTitleCase = False		#- any capital letters starting words?  (proper nouns, start of sentence... etc.)
-		self.hasCapsWord	= False		#- any words of all capitals?
-		self.capsSegments = []			#- array of sections of text that are all caps (punctuation included)
-		self.capsRatio	= -1				#- ratio of capitalized to non-capitalized letters
-		
-		self.hasEmoticons = False		#- does this event contain emoticons?
-		self.emoticons = []				#- array of emoticons used in this event
+		self.avgWordLen = -1			#+ average length of words (no punctuation)
 		
 		#begin to set event attributes
 		self.username = splitString[0].strip()
@@ -45,6 +43,7 @@ class Event:
 		
 		self.timestampAsDatetime = self.convertTimestamp(self.timestamp)
 		
+		#calculate anything dependent on dividing by text length
 		self.length = len(self.text)
 		self.isEmpty = (self.length==0)
 		if (self.isEmpty == False):
@@ -61,28 +60,24 @@ class Event:
 
 
 #---------------------------------------------
-#Getter functions!
-#getters will either calculate a value, or return the calculated
-#value if the field has already been calculated.
+# Getter functions
 	
 	def getAvgWordLength(self):
+		"""Calculate average word length in event."""
 		s = self.text
 		s = s.lower()
 		ct = s.count('x')
 		numWords = getNumWords()
 		avgWordLength = ct/numWords
-
-	def getEmoticons(self):
-		pass
-	
-	def getLength(self):
-		pass
+		return avgWordLength
 
 	def getNumChars(self):
+		"""Calculate number of characters in event."""
 		strippedText = self.text.replace(" ", "")
 		return len(strippedText)
 		
 	def getNumWords(self):
+		"""Calculate number of words in event text."""
 		s = self.text
 		s = s.lower()
 		numWords = 0
@@ -92,14 +87,8 @@ class Event:
 				numWords += 1
 		return numWords
 	
-	def getPunctuation(self):
-		pass
-	
-	def getSentenceType(self):
-		#exclamation, question, response, incomplete? ==> research
-		pass
-	
 	def convertTimestamp(self, timestamp):
+		"""Convert a timestamp from the message into a python timestamp."""
 		splitTimestamp = timestamp.split(" ")
 		date = splitTimestamp[0]
 		time = splitTimestamp[1]
@@ -116,6 +105,7 @@ class Event:
 	
 	
 	def __debug(self):
+		"""Print all variables contained in Event."""
 		print "Dumping Object Event"
 		print self.rawString
 		print "USER:\n\t"+self.username
@@ -130,7 +120,7 @@ class Event:
 		print "\tavgWordLen:", self.avgWordLen
 		
 if __name__ == '__main__':
-	
+	#testing an event string
 	string = "A_01_4_02, 2011-09-29 21:37:28.291, snd, xxx x xxxxx xxx xxxxxxxx"
 	event = Event(string)
 	
